@@ -75,6 +75,14 @@ type stEnv struct {
 	Timestamp  uint64         `json:"currentTimestamp"  gencodec:"required"`
 }
 
+type stEnvMarshaling struct {
+	Coinbase   common.UnprefixedAddress
+	Difficulty *math.HexOrDecimal256
+	GasLimit   math.HexOrDecimal64
+	Number     math.HexOrDecimal64
+	Timestamp  math.HexOrDecimal64
+}
+
 type stTransaction struct {
 	GasPrice   *big.Int `json:"gasPrice"`
 	Nonce      uint64   `json:"nonce"`
@@ -83,6 +91,13 @@ type stTransaction struct {
 	GasLimit   []uint64 `json:"gasLimit"`
 	Value      []string `json:"value"`
 	PrivateKey []byte   `json:"secretKey"`
+}
+
+type stTransactionMarshaling struct {
+	GasPrice   *math.HexOrDecimal256
+	Nonce      math.HexOrDecimal64
+	GasLimit   []math.HexOrDecimal64
+	PrivateKey hexutil.Bytes
 }
 
 // Subtests returns all valid subtests of the test.
