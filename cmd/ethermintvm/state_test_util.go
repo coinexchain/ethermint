@@ -20,9 +20,12 @@ import (
 	"github.com/ethereum/go-ethereum/tests"
 	"golang.org/x/crypto/sha3"
 
-	"github.com/cosmos/ethermint/app"
+	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
+
+	"github.com/cosmos/ethermint/app"
+	em "github.com/cosmos/ethermint/x/evm/types"
 )
 
 type StateDBX interface {
@@ -235,7 +238,9 @@ func (tx *stTransaction) toMessage(ps stPostState) (core.Message, error) {
 
 func MakePreState(db dbm.DB, accounts core.GenesisAlloc) StateDBX {
 	app := app.NewEthermintApp(log.NewTMLogger(log.NewSyncWriter(os.Stdout)), db, nil, true, map[int64]bool{}, 0)
-	statedb := app.EvmKeeper.CommitStateDB
+	app.InitChain(abci.RequestInitChain{AppStateBytes: []byte("{}")})
+	statedb := app.EvmKeeper.CommitStateDB.WithContext(app.NewContext(false, makeHeader()))
+	statedb.SetParams(em.NewParams("cet"))
 
 	for addr, a := range accounts {
 		statedb.SetCode(addr, a.Code)
@@ -259,4 +264,12 @@ func rlpHash(x interface{}) (h common.Hash) {
 
 func vmTestBlockHash(n uint64) common.Hash {
 	return common.BytesToHash(crypto.Keccak256([]byte(big.NewInt(int64(n)).String())))
+}
+func makeHeader() abci.Header {
+	return abci.Header{
+		//ChainID:         string(config.ChainID.Bytes()),
+		//ProposerAddress: block.Header.Coinbase.Bytes(),
+		//Height:          block.Header.Number.Int64(),
+		//Time:            time.Unix(int64(block.Header.Timestamp), 0),
+	}
 }
