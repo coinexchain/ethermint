@@ -46,7 +46,7 @@ func stateTestCmd() *cobra.Command {
 		},
 	}
 	cmd.Flags().Bool(flagNoMemory, true, "disable memory output")
-	cmd.Flags().Bool(flagNoStack, true, "disable stack output")
+	cmd.Flags().Bool(flagNoStack, false, "disable stack output")
 	cmd.Flags().Bool(flagNoStorage, true, "disable storage output")
 	cmd.Flags().Bool(flagNoReturnData, true, "disable return data output")
 	return cmd

@@ -41,7 +41,7 @@ func runTestFile(testFile string,
 
 	cfg := vm.Config{
 		Tracer: tracer,
-		Debug:  false,
+		Debug:  true,
 	}
 	results := make([]StatetestResult, 0, len(tests))
 	for key, test := range tests {
